@@ -117,8 +117,12 @@ document.addEventListener("lichessEvent", (e) => {
       break;
     case "gameStart":
       console.log("gameStart", event.game);
-      window.open(`https://lichess.org/${event.game.fullId}`)?.blur();
-      window.focus();
+      const style =
+        "background-color: darkblue; color: white; font-style: italic; border: 5px solid hotpink; font-size: 2em;";
+      console.log(
+        `%cOpen Game: https://lichess.org/${event.game.fullId}`,
+        style
+      );
       LichessGames.push(event.game.id);
       if (windowState === 0) {
         windowState = 1;
