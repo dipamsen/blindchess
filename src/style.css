@@ -1,0 +1,120 @@
+/* chess board */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  height: 100vh;
+  width: 100vw;
+  background-color: #2d2d2d;
+  color: white;
+}
+
+.board-container {
+  flex: 0 0 500px;
+  margin: auto;
+}
+
+.board {
+  /* display: none; */
+  /* display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr); */
+  width: 500px;
+  height: 500px;
+}
+
+.input-area input {
+  width: 100%;
+  height: 50px;
+  font-size: 20px;
+  padding: 0 10px;
+  border: none;
+  outline: none;
+  margin-top: 10px;
+  text-align: center;
+  caret-color: transparent;
+}
+
+body {
+  display: flex;
+}
+
+body > *:not(.board-container) {
+  width: 100%;
+}
+
+[data-state="1"]:not(.debug) piece {
+  /* display: none; */
+  opacity: 0;
+}
+
+[data-state="0"] [data-if-state="1"] {
+  display: none;
+}
+
+[data-state="1"] [data-if-state="0"] {
+  display: none;
+}
+
+.settings form {
+  display: flex;
+  flex-direction: column;
+  margin: 10%;
+}
+
+.ingame div {
+  margin: 10%;
+}
+
+.settings form > * {
+  margin-bottom: 10px;
+  font-size: 20px;
+  padding: 0 10px;
+}
+
+.settings form > *:last-child {
+  margin-bottom: 0;
+}
+
+button {
+  width: 100%;
+  height: 50px;
+  font-size: 20px;
+  padding: 0 10px;
+  border: none;
+  outline: none;
+  margin-top: 10px;
+  text-align: center;
+  background-color: black;
+  color: white;
+}
+
+.error.show {
+  display: block;
+}
+
+.error {
+  display: none;
+  color: red;
+  font-size: 20px;
+  margin: 10px;
+}
+
+.moves-container {
+  display: flex;
+  flex-direction: column;
+  margin: 10%;
+  color: white;
+}
+
+.moves-container .moves {
+  font-size: 2rem;
+}
+
+[data-state="0"] .moves-container {
+  display: none;
+}
