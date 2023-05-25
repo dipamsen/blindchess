@@ -9,10 +9,13 @@ import {
 } from "@mui/material";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import { useQuery } from "@tanstack/react-query";
-import { useStoreState } from "../store";
+import { useStoreActions, useStoreState } from "../store";
+import authenticate from "../store/authenticate";
 
 export default function Header({ loggedIn }: { loggedIn: boolean }) {
   const auth = useStoreState((state) => state.auth);
+  const authenticate = useStoreActions((state) => state.authenticate);
+  const logout = useStoreActions((state) => state.logout);
   const { isLoading, error, data } = useQuery({
     queryKey: ["userInfo"],
     queryFn: () =>
@@ -20,6 +23,11 @@ export default function Header({ loggedIn }: { loggedIn: boolean }) {
         .decorateFetchHTTPClient(fetch)("https://lichess.org/api/account")
         .then((res) => res.json()),
   });
+
+  const logOutAndReload = () => {
+    logout();
+    location.href = "/";
+  };
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -28,14 +36,21 @@ export default function Header({ loggedIn }: { loggedIn: boolean }) {
             BlindChess
           </Typography>
 
-          {!loggedIn && <Button color="inherit">Login</Button>}
-
-          {/* user prof */}
           {loggedIn && (
-            <Box sx={{ gap: 1, display: "flex" }}>
+            <Box sx={{ gap: 1, display: "flex", marginRight: 2 }}>
               <AccountCircle />
               <Typography>{data?.username}</Typography>
             </Box>
+          )}
+
+          {!loggedIn ? (
+            <Button color="primary" onClick={() => authenticate()}>
+              Login with Lichess
+            </Button>
+          ) : (
+            <Button color="error" onClick={logOutAndReload}>
+              Logout
+            </Button>
           )}
         </Toolbar>
       </AppBar>

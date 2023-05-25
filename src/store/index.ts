@@ -8,6 +8,7 @@ import {
 } from "easy-peasy";
 import authenticate from "./authenticate";
 import { AccessContext, OAuth2AuthCodePKCE } from "@bity/oauth2-auth-code-pkce";
+import Business from "../logic/ChessGame";
 
 export interface EPStore {
   auth: OAuth2AuthCodePKCE;
@@ -26,6 +27,8 @@ export interface EPStore {
   userInfo: any;
   setUserInfo: Action<EPStore, any>;
   logout: Thunk<EPStore, undefined, any, EPStore, Promise<void>>;
+  business: Business | null;
+  setBusiness: Action<EPStore, Business>;
 }
 
 const lichessHost = "https://lichess.org";
@@ -60,6 +63,10 @@ const store = createStore<EPStore>({
   logout: thunk(async (actions, payload, helpers) => {
     const auth = helpers.getState().auth;
     auth.reset();
+  }),
+  business: null,
+  setBusiness: action((state, payload) => {
+    state.business = payload;
   }),
 });
 

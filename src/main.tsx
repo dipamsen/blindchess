@@ -12,7 +12,22 @@ import {
   useQuery,
 } from "@tanstack/react-query";
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
-const queryClient = new QueryClient();
+import "chessground/assets/chessground.base.css";
+import "chessground/assets/chessground.brown.css";
+import "chessground/assets/chessground.cburnett.css";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      // dont retry if 429: too many requests
+      retry(failureCount, error) {
+        console.log(failureCount, error);
+        return false;
+        // return error.status !== 429 && failureCount < 2;
+      },
+    },
+  },
+});
 
 const router = createBrowserRouter([
   {
