@@ -2,65 +2,16 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Blind Chess board</title>
+    <title>BlindChess</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+    />
   </head>
   <body>
-    <div>
-      <div class="error"></div>
-      <div class="moves-container">
-        <span>Last Move</span>
-        <div class="moves"></div>
-      </div>
-    </div>
-    <div class="board-container">
-      <div class="board"></div>
-
-      <div class="input-area">
-        <input autofocus onblur="this.focus()" type="text" />
-      </div>
-    </div>
-
-    <div data-if-state="0" class="settings">
-      <form>
-        <select name="fen" id="fen">
-          <option
-            value="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
-          >
-            Standard Position
-          </option>
-          <option value="8/8/8/3k4/8/8/8/5RQK w - - 0 1">
-            Make Queen and Rook
-          </option>
-          <option value="8/8/8/8/8/4k3/6R1/6RK w - - 0 1">
-            Mate two Rooks
-          </option>
-        </select>
-
-        <select name="level" id="level">
-          <option value="1">Stockfish Level 1</option>
-          <option value="2">Stockfish Level 2</option>
-          <option value="3">Stockfish Level 3</option>
-          <option value="4">Stockfish Level 4</option>
-          <option value="5">Stockfish Level 5</option>
-          <option value="6" selected>Stockfish Level 6</option>
-          <option value="7">Stockfish Level 7</option>
-          <option value="8">Stockfish Level 8</option>
-        </select>
-        <button type="submit" class="start">Start Game</button>
-      </form>
-    </div>
-
-    <div class="ingame" data-if-state="1">
-      <div>
-        <label>
-          <input type="checkbox" name="debug" id="debug" />
-          Debug
-        </label>
-        <button class="reset">Reset</button>
-      </div>
-    </div>
-
-    <script type="module" src="/src/main.ts"></script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
