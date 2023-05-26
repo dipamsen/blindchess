@@ -5,17 +5,22 @@ import { Box, CircularProgress, Container, Typography } from "@mui/material";
 import ChessBoard from "../components/ChessBoard";
 import SettingsPanel from "../components/SettingsPanel";
 import InfoPanel from "../components/InfoPanel";
+import { useEffect } from "react";
 
 export default function Dashboard() {
   const logout = useStoreActions((actions) => actions.logout);
   const auth = useStoreState((state) => state.auth);
-  const { isLoading, error, data } = useQuery({
+  const { isLoading, error, data, refetch } = useQuery({
     queryKey: ["userInfo"],
     queryFn: () =>
       auth
         .decorateFetchHTTPClient(fetch)("https://lichess.org/api/account")
         .then((res) => res.json()),
   });
+
+  useEffect(() => {
+    refetch();
+  }, []);
 
   return (
     <div>

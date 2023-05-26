@@ -8,7 +8,7 @@ import {
 } from "easy-peasy";
 import authenticate from "./authenticate";
 import { AccessContext, OAuth2AuthCodePKCE } from "@bity/oauth2-auth-code-pkce";
-import Business from "../logic/ChessGame";
+import Business from "../logic/Business";
 
 export interface EPStore {
   auth: OAuth2AuthCodePKCE;

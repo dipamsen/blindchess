@@ -10,7 +10,7 @@ import React, { useState } from "react";
 export default function useDropDown(
   name: string,
   options: { content: string; value: any }[],
-  defaultValue: any
+  defaultValue?: any
 ) {
   const [selectedValue, setSelectedValue] = useState(
     defaultValue || options[0].value
@@ -21,9 +21,15 @@ export default function useDropDown(
     setSelectedValue(event.target.value as string);
   };
 
-  function DropDown() {
+  function DropDown({
+    fullWidth = false,
+    sx = {},
+  }: {
+    fullWidth?: boolean;
+    sx?: any;
+  }) {
     return (
-      <FormControl fullWidth>
+      <FormControl fullWidth={fullWidth} sx={sx}>
         <InputLabel id={id}>{name}</InputLabel>
         <Select
           labelId={id}
@@ -33,7 +39,9 @@ export default function useDropDown(
           onChange={handleChange}
         >
           {options.map((option) => (
-            <MenuItem value={option.value}>{option.content}</MenuItem>
+            <MenuItem key={option.value} value={option.value}>
+              {option.content}
+            </MenuItem>
           ))}
         </Select>
       </FormControl>

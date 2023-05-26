@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Chessground } from "chessground";
 import { useStoreActions } from "../store";
-import Business from "../logic/ChessGame";
+import Business from "../logic/Business";
 import { Typography } from "@mui/material";
 import { useStoreState } from "../store";
 
@@ -36,7 +36,7 @@ export default function ChessBoard() {
         flexGrow: 1,
       }}
     >
-      <Typography>Board Editor</Typography>
+      <Typography fontFamily={"monospace"}>Board Editor</Typography>
       <div
         style={{
           width: "100%",

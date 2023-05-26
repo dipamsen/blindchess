@@ -1,10 +1,11 @@
 import React from "react";
 import useDropDown from "./DropDown";
-import { Box } from "@mui/material";
+import { Box, Divider } from "@mui/material";
+import FENSelector from "./FENSelector";
 
 export default function SettingsPanel() {
-  const { DropDown } = useDropDown(
-    "Level",
+  const { DropDown: OpponentDropDown } = useDropDown(
+    "Opponent",
     new Array(8)
       .fill(0)
       .map((_, i) => ({ content: `Stockfish Level ${i + 1}`, value: i + 1 })),
@@ -12,8 +13,10 @@ export default function SettingsPanel() {
   );
 
   return (
-    <Box sx={{ flexGrow: 0.8, mx: 3 }}>
-      <DropDown />
+    <Box sx={{ width: "40vw", mx: 3 }}>
+      <OpponentDropDown fullWidth />
+      <Box sx={{ my: 2 }} />
+      <FENSelector />
     </Box>
   );
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   AppBar,
   Box,
@@ -12,17 +12,21 @@ import { useQuery } from "@tanstack/react-query";
 import { useStoreActions, useStoreState } from "../store";
 import authenticate from "../store/authenticate";
 
-export default function Header({ loggedIn }: { loggedIn: boolean }) {
+export default function Header({ loggedIn = false }: { loggedIn?: boolean }) {
   const auth = useStoreState((state) => state.auth);
   const authenticate = useStoreActions((state) => state.authenticate);
   const logout = useStoreActions((state) => state.logout);
-  const { isLoading, error, data } = useQuery({
+  const { isLoading, error, data, refetch } = useQuery({
     queryKey: ["userInfo"],
     queryFn: () =>
       auth
         .decorateFetchHTTPClient(fetch)("https://lichess.org/api/account")
         .then((res) => res.json()),
   });
+
+  useEffect(() => {
+    refetch();
+  }, []);
 
   const logOutAndReload = () => {
     logout();

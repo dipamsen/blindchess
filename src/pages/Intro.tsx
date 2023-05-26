@@ -4,7 +4,7 @@ import { Container, Typography } from "@mui/material";
 function App() {
   return (
     <div>
-      <Header loggedIn={false} />
+      <Header />
 
       <Container maxWidth="sm" sx={{ mt: 2 }}>
         <Typography variant="h3">Welcome to BlindChess!</Typography>

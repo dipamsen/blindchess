@@ -25,6 +25,8 @@ const queryClient = new QueryClient({
         return false;
         // return error.status !== 429 && failureCount < 2;
       },
+      refetchOnMount: false,
+      enabled: false,
     },
   },
 });
