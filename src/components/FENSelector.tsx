@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import useDropDown from "./DropDown";
 import { Box, IconButton, Tooltip } from "@mui/material";
-import ReloadIcon from "@mui/icons-material/AutoRenew";
+import ReloadIcon from "@mui/icons-material/Autorenew";
 import { Positions } from "../utils/createRandomPosition";
 import { useStoreActions, useStoreState } from "../store";
 
