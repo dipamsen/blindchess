@@ -7,6 +7,7 @@ export enum Positions {
   Queen = "One Queen",
   TwoBishops = "Two Bishops",
   BishopAndKnight = "Bishop and Knight",
+  Custom = "Custom",
 }
 
 export const createRandomPosition = (pos: Positions): string => {
