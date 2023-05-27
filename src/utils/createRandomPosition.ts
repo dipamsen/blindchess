@@ -5,6 +5,7 @@ export enum Positions {
   // Starting = "Starting Position",
   TwoRooks = "Two Rooks",
   Queen = "One Queen",
+  Rook = "One Rook",
   TwoBishops = "Two Bishops",
   BishopAndKnight = "Bishop and Knight",
   Custom = "Custom",
@@ -26,6 +27,11 @@ export const createRandomPosition = (pos: Positions): string => {
     }
     case Positions.Queen: {
       game.put({ type: "q", color: "w" }, random(SQUARES));
+      numPieces++;
+      break;
+    }
+    case Positions.Rook: {
+      game.put({ type: "r", color: "w" }, random(SQUARES));
       numPieces++;
       break;
     }
