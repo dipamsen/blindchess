@@ -1,9 +1,12 @@
 import React from "react";
 import useDropDown from "./DropDown";
-import { Box, Divider } from "@mui/material";
+import { Box, Divider, useMediaQuery, useTheme } from "@mui/material";
 import FENSelector from "./FENSelector";
 
 export default function SettingsPanel() {
+  const theme = useTheme();
+  const small = useMediaQuery(theme.breakpoints.down("md"));
+
   const { DropDown: OpponentDropDown } = useDropDown(
     "Opponent",
     new Array(8)
@@ -13,7 +16,7 @@ export default function SettingsPanel() {
   );
 
   return (
-    <Box sx={{ width: "40vw", mx: 3 }}>
+    <Box sx={{ width: small ? "100%" : "40vw", px: 3, mt: small ? 5 : 0 }}>
       <OpponentDropDown fullWidth />
       <Box sx={{ my: 2 }} />
       <FENSelector />

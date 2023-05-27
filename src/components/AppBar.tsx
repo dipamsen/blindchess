@@ -6,13 +6,18 @@ import {
   IconButton,
   Toolbar,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import AccountCircle from "@mui/icons-material/AccountCircle";
+import Logout from "@mui/icons-material/PowerSettingsNew";
 import { useQuery } from "@tanstack/react-query";
 import { useStoreActions, useStoreState } from "../store";
 import authenticate from "../store/authenticate";
 
 export default function Header({ loggedIn = false }: { loggedIn?: boolean }) {
+  const theme = useTheme();
+  const small = useMediaQuery(theme.breakpoints.down("md"));
   const auth = useStoreState((state) => state.auth);
   const authenticate = useStoreActions((state) => state.authenticate);
   const logout = useStoreActions((state) => state.logout);
@@ -51,6 +56,16 @@ export default function Header({ loggedIn = false }: { loggedIn?: boolean }) {
             <Button color="primary" onClick={() => authenticate()}>
               Login with Lichess
             </Button>
+          ) : small ? (
+            <IconButton
+              size="large"
+              edge="start"
+              color="error"
+              aria-label="menu"
+              onClick={logOutAndReload}
+            >
+              <Logout />
+            </IconButton>
           ) : (
             <Button color="error" onClick={logOutAndReload}>
               Logout

@@ -4,8 +4,11 @@ import {
   Select,
   MenuItem,
   SelectChangeEvent,
+  NativeSelect,
+  useTheme,
+  useMediaQuery,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 
 export default function useDropDown(
   name: string,
@@ -17,7 +20,7 @@ export default function useDropDown(
   );
   const id = `select-label-${name}`;
 
-  const handleChange = (event: SelectChangeEvent<{ value: unknown }>) => {
+  const handleChange = (event: any) => {
     setSelectedValue(event.target.value as string);
   };
 
@@ -28,8 +31,22 @@ export default function useDropDown(
     fullWidth?: boolean;
     sx?: any;
   }) {
-    return (
-      <FormControl fullWidth={fullWidth} sx={sx}>
+    const theme = useTheme();
+    const small = useMediaQuery(theme.breakpoints.down("md"));
+
+    return small ? (
+      <FormControl fullWidth={fullWidth} sx={{ ...sx, mt: 3 }}>
+        <InputLabel htmlFor={id}>{name}</InputLabel>
+        <NativeSelect id={id} value={selectedValue} onChange={handleChange}>
+          {options.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.content}
+            </option>
+          ))}
+        </NativeSelect>
+      </FormControl>
+    ) : (
+      <FormControl fullWidth={fullWidth}>
         <InputLabel id={id}>{name}</InputLabel>
         <Select
           labelId={id}

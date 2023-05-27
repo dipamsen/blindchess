@@ -9,6 +9,8 @@ import {
   TextField,
   Tooltip,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import ReloadIcon from "@mui/icons-material/Autorenew";
 import { Positions } from "../utils/createRandomPosition";
@@ -29,6 +31,8 @@ export default function FENSelector() {
     "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
   );
   const [error, setError] = useState(false);
+  const theme = useTheme();
+  const small = useMediaQuery(theme.breakpoints.down("md"));
 
   const randomizePosition = () => {
     business.randomize(Positions[type as keyof typeof Positions]);
@@ -80,9 +84,9 @@ export default function FENSelector() {
             label="FEN"
             value={fen}
             error={error}
-            variant="outlined"
+            variant={small ? "standard" : "outlined"}
             fullWidth
-            sx={{ mt: 2 }}
+            sx={{ mt: small ? 4 : 2 }}
             onChange={(e) => setFen(e.target.value)}
           />
           <Typography variant="body2" sx={{ mt: 1 }}>

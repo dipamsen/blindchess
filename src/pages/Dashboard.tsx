@@ -1,7 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { useStoreActions, useStoreState } from "../store";
 import Header from "../components/AppBar";
-import { Box, CircularProgress, Container, Typography } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  Container,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import ChessBoard from "../components/ChessBoard";
 import SettingsPanel from "../components/SettingsPanel";
 import InfoPanel from "../components/InfoPanel";
@@ -17,6 +24,8 @@ export default function Dashboard() {
         .decorateFetchHTTPClient(fetch)("https://lichess.org/api/account")
         .then((res) => res.json()),
   });
+  const theme = useTheme();
+  const small = useMediaQuery(theme.breakpoints.down("md"));
 
   useEffect(() => {
     refetch();
@@ -33,7 +42,14 @@ export default function Dashboard() {
       ) : error ? (
         <div>{(error as any).message}</div>
       ) : (
-        <Box sx={{ mt: 2, display: "flex", width: "100%", flex: 1 }}>
+        <Box
+          sx={{
+            mt: 2,
+            display: "flex",
+            width: "100%",
+            flexDirection: small ? "column" : "row",
+          }}
+        >
           <InfoPanel />
           <ChessBoard />
           <SettingsPanel />
