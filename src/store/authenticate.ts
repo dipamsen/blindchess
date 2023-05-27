@@ -8,7 +8,7 @@ export default thunk<EPStore>(async (actions, payload, helpers) => {
   try {
     const hasAuthCode = await oauth.isReturningFromAuthServer();
     if (hasAuthCode) {
-      console.log("hasAuthCode");
+      //      console.log("hasAuthCode");
       const token = await oauth.getAccessToken();
       const fetch = oauth.decorateFetchHTTPClient(window.fetch);
 
@@ -32,5 +32,6 @@ export default thunk<EPStore>(async (actions, payload, helpers) => {
   }
   return {
     authenticated: false,
+    errorMessage: "Something went wrong.",
   };
 });

@@ -90,11 +90,6 @@ export default function FENSelector() {
             onChange={(e) => setFen(e.target.value)}
           />
           <Typography variant="body2" sx={{ mt: 1 }}>
-            {/* Use the board editor to set the position, or use{" "}
-            <Link target="_blank" href="https://lichess.org/editor">
-              lichess.org/editor
-            </Link>{" "}
-            and copy and paste FEN here. */}
             Set the position using the board editor; or use{" "}
             <Link href="https://lichess.org/editor" target="_blank">
               lichess.org/editor

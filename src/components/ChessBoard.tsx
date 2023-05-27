@@ -9,6 +9,7 @@ export default function ChessBoard() {
   const board = React.useRef<HTMLDivElement>(null);
   const setBusiness = useStoreActions((actions) => actions.setBusiness);
   const business = useStoreState((state) => state.business);
+  const auth = useStoreState((state) => state.auth);
 
   useEffect(() => {
     if (board.current) {
@@ -24,7 +25,7 @@ export default function ChessBoard() {
           check: false,
         },
       });
-      setBusiness(new Business(cg));
+      setBusiness(new Business(cg, auth));
     }
   }, []);
 

@@ -1,14 +1,16 @@
 import {
   Action,
+  Computed,
   Thunk,
   action,
+  computed,
   createStore,
   createTypedHooks,
   thunk,
 } from "easy-peasy";
 import authenticate from "./authenticate";
 import { AccessContext, OAuth2AuthCodePKCE } from "@bity/oauth2-auth-code-pkce";
-import Business from "../logic/Business";
+import Business, { Status } from "../logic/Business";
 
 export interface EPStore {
   auth: OAuth2AuthCodePKCE;
@@ -29,10 +31,12 @@ export interface EPStore {
   logout: Thunk<EPStore, undefined, any, EPStore, Promise<void>>;
   business: Business | null;
   setBusiness: Action<EPStore, Business>;
+  status: Status;
+  setStatus: Action<EPStore, Status>;
 }
 
 const lichessHost = "https://lichess.org";
-const scopes = ["email:read"];
+const scopes = ["challenge:read", "challenge:write", "board:play"];
 const clientId = "devchess.app";
 const clientUrl = (() => {
   const url = new URL(location.href);
@@ -67,6 +71,10 @@ const store = createStore<EPStore>({
   business: null,
   setBusiness: action((state, payload) => {
     state.business = payload;
+  }),
+  status: Status.Idle,
+  setStatus: action((state, payload) => {
+    state.status = payload;
   }),
 });
 
