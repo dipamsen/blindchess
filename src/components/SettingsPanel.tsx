@@ -11,10 +11,12 @@ import {
 import FENSelector from "./FENSelector";
 import { useStoreActions, useStoreState } from "../store";
 import { Status } from "../logic/Business";
+import MoveInput from "./MoveInput";
 
 export default function SettingsPanel() {
   const theme = useTheme();
   const small = useMediaQuery(theme.breakpoints.down("md"));
+  const [error, setError] = useState("");
 
   const business = useStoreState((state) => state.business)!;
   const status = useStoreState((state) => state.status);
@@ -27,7 +29,7 @@ export default function SettingsPanel() {
       .map((_, i) => ({ content: `Stockfish Level ${i + 1}`, value: i + 1 })),
     6
   );
-
+  console.log(error);
   return status === Status.Idle ? (
     <Box sx={{ width: small ? "100%" : "40vw", px: 3, mt: small ? 5 : 0 }}>
       <OpponentDropDown fullWidth />
@@ -39,19 +41,32 @@ export default function SettingsPanel() {
         variant="contained"
         fullWidth
         color="secondary"
-        onClick={() => business.createChallenge(lvl)}
+        onClick={() => {
+          setError("");
+          business.createChallenge(lvl).catch((e) => setError(e.message));
+        }}
       >
         Start Game
       </Button>
+
+      <Typography variant="body1" sx={{ mt: 2 }} color="error">
+        {error}
+      </Typography>
     </Box>
   ) : status === Status.Playing ? (
     <Box sx={{ width: small ? "100%" : "40vw", px: 3, mt: small ? 5 : 0 }}>
       <Typography variant="h6" sx={{ mb: 2 }}>
         Game in progress
       </Typography>
+      {/* TODO: Make responsive to change */}
       <Typography variant="body1" sx={{ mb: 2 }}>
-        {true ? "White" : "Black"} to move
+        {business.game.turn() === "w" ? "White" : "Black"} to move
       </Typography>
+
+      <MoveInput />
+
+      <Divider sx={{ mt: 2, mb: 16 }} />
+
       <Button
         variant="contained"
         fullWidth
@@ -67,7 +82,7 @@ export default function SettingsPanel() {
         Game over
       </Typography>
       <Typography variant="body1" sx={{ mb: 2 }}>
-        {true ? "White" : "Black"} won
+        {business.winner}
       </Typography>
       <Button
         variant="contained"

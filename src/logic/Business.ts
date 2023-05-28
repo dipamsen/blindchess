@@ -14,6 +14,7 @@ export default class Business {
   token: string | null = null;
   game: Chess;
   currGame: any = null;
+  winner: string | null = null;
 
   constructor(cg: Api, auth: OAuth2AuthCodePKCE) {
     this.cg = cg;
@@ -27,6 +28,7 @@ export default class Business {
     const unsubscribe = store.subscribe(() => {
       const status = store.getState().status;
       if (status === Status.Idle) {
+        this.currGame = null;
         console.log("idle");
         this.cg.set({
           movable: { free: true },
@@ -34,13 +36,13 @@ export default class Business {
             deleteOnDropOff: true,
             showGhost: false,
           },
+          viewOnly: false,
           highlight: {
             lastMove: false,
             check: false,
           },
         });
-      } else if (status === Status.Playing || status === Status.GameOver) {
-        console.log(status === Status.Playing ? "playing" : "game over");
+      } else if (status === Status.Playing) {
         this.cg.set({
           viewOnly: true,
           drawable: {
@@ -48,15 +50,14 @@ export default class Business {
             visible: true,
             eraseOnClick: true,
           },
+        });
+      } else if (status === Status.GameOver) {
+        this.cg.set({
+          viewOnly: true,
           highlight: {
-            check: status === Status.GameOver,
+            check: true,
           },
-          check:
-            status === Status.GameOver &&
-            this.game.inCheck() &&
-            this.game.turn() === "w"
-              ? "white"
-              : "black",
+          check: this.game.isCheckmate(),
         });
       }
     });
@@ -116,7 +117,16 @@ export default class Business {
         data.type === "gameFinish" &&
         this.currGame?.id === data.game.id
       ) {
-        this.currGame = null;
+        this.winner =
+          data.game.winner === "white"
+            ? "White won"
+            : data.game.winner === "black"
+            ? "Black won"
+            : data.game.status?.name === "draw"
+            ? "Draw"
+            : data.game.status?.name === "aborted"
+            ? "Game Aborted"
+            : null;
         store.getActions().setStatus(Status.GameOver);
       }
     };
@@ -131,7 +141,8 @@ export default class Business {
       if (data.type === "gameFull") {
         this.cg.set({ fen: data.state.fen });
       } else if (data.type === "gameState") {
-        const moves = data.moves.split(" ");
+        const moves = data.moves.split(" ").filter((m: string) => m.length > 0);
+        if (moves.length === 0) return;
         this.game.move(moves[moves.length - 1]);
         this.cg.set({ fen: this.game.fen() });
       }
@@ -143,22 +154,27 @@ export default class Business {
     const fen = this.cg.getFen();
     const c = new Chess();
     c.load(fen + " w");
-    const color = c.turn() === "w" ? "white" : "black";
+    const color = "white"; //c.turn() === "w" ? "white" : "black";
     const fd = new FormData();
     fd.append("level", level.toString());
     fd.append("color", color);
     fd.append("variant", "standard");
-    fd.append("fen", fen);
-
-    const res = await fetch("https://lichess.org/api/challenge/ai", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${this.token}`,
-      },
-      body: fd,
-    });
-    const data = await res.json();
-    console.log(data);
+    fd.append("fen", fen + " w - - 0 1");
+    try {
+      const res = await fetch("https://lichess.org/api/challenge/ai", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${this.token}`,
+        },
+        body: fd,
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error.message);
+      console.log(data);
+    } catch (e) {
+      console.log(e);
+      throw new Error("Invalid start position");
+    }
   }
 
   async resignOrAbort() {
@@ -192,8 +208,7 @@ export default class Business {
       moveP = this.game.move(move);
       this.game.undo();
     } catch (e) {
-      console.log(e);
-      return;
+      throw e;
     }
     const res = await fetch(
       `https://lichess.org/api/board/game/${this.currGame.id}/move/${moveP.lan}`,

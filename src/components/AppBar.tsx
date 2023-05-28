@@ -21,6 +21,7 @@ export default function Header({ loggedIn = false }: { loggedIn?: boolean }) {
   const auth = useStoreState((state) => state.auth);
   const authenticate = useStoreActions((state) => state.authenticate);
   const logout = useStoreActions((state) => state.logout);
+  const setUsername = useStoreActions((state) => state.setUsername);
   const { isLoading, error, data, refetch } = useQuery({
     queryKey: ["userInfo"],
     queryFn: () =>
@@ -30,7 +31,9 @@ export default function Header({ loggedIn = false }: { loggedIn?: boolean }) {
   });
 
   useEffect(() => {
-    refetch();
+    refetch().then((val) => {
+      setUsername(val.data.username);
+    });
   }, []);
 
   const logOutAndReload = () => {

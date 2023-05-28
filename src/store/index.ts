@@ -33,6 +33,8 @@ export interface EPStore {
   setBusiness: Action<EPStore, Business>;
   status: Status;
   setStatus: Action<EPStore, Status>;
+  username: string;
+  setUsername: Action<EPStore, string>;
 }
 
 const lichessHost = "https://lichess.org";
@@ -75,6 +77,10 @@ const store = createStore<EPStore>({
   status: Status.Idle,
   setStatus: action((state, payload) => {
     state.status = payload;
+  }),
+  username: "",
+  setUsername: action((state, payload) => {
+    state.username = payload;
   }),
 });
 

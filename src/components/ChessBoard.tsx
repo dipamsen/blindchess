@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Chessground } from "chessground";
 import { useStoreActions } from "../store";
-import Business from "../logic/Business";
+import Business, { Status } from "../logic/Business";
 import { Typography } from "@mui/material";
 import { useStoreState } from "../store";
 
@@ -10,6 +10,8 @@ export default function ChessBoard() {
   const setBusiness = useStoreActions((actions) => actions.setBusiness);
   const business = useStoreState((state) => state.business);
   const auth = useStoreState((state) => state.auth);
+  const status = useStoreState((state) => state.status);
+  const username = useStoreState((state) => state.username);
 
   useEffect(() => {
     if (board.current) {
@@ -37,7 +39,10 @@ export default function ChessBoard() {
         flexGrow: 1,
       }}
     >
-      <Typography fontFamily={"monospace"}>Board Editor</Typography>
+      {status === Status.Idle && <Typography>Board Editor</Typography>}{" "}
+      {status !== Status.Idle && (
+        <Typography>{business?.currGame.opponent.username}</Typography>
+      )}
       <div
         style={{
           width: "100%",
@@ -51,7 +56,8 @@ export default function ChessBoard() {
           }}
           ref={board}
         ></div>
-      </div>
+      </div>{" "}
+      {status !== Status.Idle && <Typography>{username}</Typography>}
     </div>
   );
 }
