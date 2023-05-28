@@ -13,6 +13,7 @@ import ChessBoard from "../components/ChessBoard";
 import SettingsPanel from "../components/SettingsPanel";
 import InfoPanel from "../components/InfoPanel";
 import { useEffect } from "react";
+import { Status } from "../logic/Business";
 
 export default function Dashboard() {
   const logout = useStoreActions((actions) => actions.logout);
@@ -27,6 +28,8 @@ export default function Dashboard() {
   const theme = useTheme();
   const small = useMediaQuery(theme.breakpoints.down("md"));
   const blind = useStoreState((state) => state.blind);
+
+  const status = useStoreState((state) => state.status);
 
   useEffect(() => {
     refetch();
@@ -50,7 +53,7 @@ export default function Dashboard() {
             width: "100%",
             flexDirection: small ? "column" : "row",
           }}
-          className={blind ? "blind" : ""}
+          className={blind && status === Status.Playing ? "blind" : ""}
         >
           <InfoPanel />
           <ChessBoard />
