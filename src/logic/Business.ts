@@ -172,8 +172,10 @@ export default class Business {
       if (!res.ok) throw new Error(data.error.message);
       console.log(data);
     } catch (e) {
-      console.log(e);
-      throw new Error("Invalid start position");
+      const err = e as Error;
+      throw new Error(
+        err.message === "Invalid FEN" ? "Invalid start position" : err.message
+      );
     }
   }
 
