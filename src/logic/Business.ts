@@ -58,9 +58,8 @@ export default class Business {
             check: true,
           },
           check:
-            this.game.isCheckmate() && this.game.turn() === "w"
-              ? "white"
-              : "black",
+            this.game.isCheckmate() &&
+            (this.game.turn() === "w" ? "white" : "black"),
         });
       }
     });
@@ -127,6 +126,8 @@ export default class Business {
             ? "Black won"
             : data.game.status?.name === "draw"
             ? "Draw"
+            : data.game.status?.name === "stalemate"
+            ? "Draw by Stalemate"
             : data.game.status?.name === "aborted"
             ? "Game Aborted"
             : null;
@@ -155,6 +156,10 @@ export default class Business {
           .getActions()
           .setTurn(this.game.turn() === "w" ? "white" : "black");
       } else if (data.type === "gameState") {
+        if (["aborted", "resign"].includes(data.status)) {
+          return;
+        }
+
         const moves = data.moves.split(" ").filter((m: string) => m.length > 0);
         if (moves.length === 0) return;
         this.game.move(moves[moves.length - 1]);

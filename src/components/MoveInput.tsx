@@ -39,7 +39,7 @@ export default function MoveInput() {
         value={move}
         autoFocus
         onBlur={(e) => e.target.focus()}
-        onChange={(e) => setMove(e.target.value)}
+        onChange={(e) => setMove(e.target.value.trim())}
         onKeyDown={(e) => e.key === "Enter" && !playing && playMove()}
       />
       <Typography variant="caption">
