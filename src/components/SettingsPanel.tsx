@@ -3,7 +3,10 @@ import useDropDown from "./DropDown";
 import {
   Box,
   Button,
+  Checkbox,
   Divider,
+  FormControl,
+  FormControlLabel,
   Typography,
   useMediaQuery,
   useTheme,
@@ -23,6 +26,8 @@ export default function SettingsPanel() {
   const setStatus = useStoreActions((state) => state.setStatus);
   const turn = useStoreState((state) => state.gameState?.turn);
   const moves = useStoreState((state) => state.gameState?.moves);
+  const blind = useStoreState((state) => state.blind);
+  const setBlind = useStoreActions((state) => state.setBlind);
 
   const lastMoves = turn === "white" ? moves?.slice(-2) : moves?.slice(-1);
   const lastMoveTxt =
@@ -87,6 +92,14 @@ export default function SettingsPanel() {
       <Typography variant="body1" sx={{ mb: 2 }}>
         {turn === "white" ? "White" : "Black"} to move
       </Typography>
+
+      <FormControlLabel
+        sx={{ marginLeft: "100%", translate: "-100%", whiteSpace: "nowrap" }}
+        control={
+          <Checkbox checked={!blind} onChange={(e) => setBlind(!blind)} />
+        }
+        label="Show Pieces"
+      />
 
       <MoveInput />
 

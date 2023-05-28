@@ -26,6 +26,7 @@ export default function Dashboard() {
   });
   const theme = useTheme();
   const small = useMediaQuery(theme.breakpoints.down("md"));
+  const blind = useStoreState((state) => state.blind);
 
   useEffect(() => {
     refetch();
@@ -49,6 +50,7 @@ export default function Dashboard() {
             width: "100%",
             flexDirection: small ? "column" : "row",
           }}
+          className={blind ? "blind" : ""}
         >
           <InfoPanel />
           <ChessBoard />

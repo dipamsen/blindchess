@@ -45,6 +45,8 @@ export interface EPStore {
   setMoves: Action<EPStore, Move[]>;
   setTurn: Action<EPStore, "white" | "black">;
   movesOrdered: Computed<EPStore, Move[][]>;
+  blind: boolean;
+  setBlind: Action<EPStore, boolean>;
 }
 
 const lichessHost = "https://lichess.org";
@@ -131,6 +133,10 @@ const store = createStore<EPStore>({
       return [];
     }
     return movesArr;
+  }),
+  blind: true,
+  setBlind: action((state, payload) => {
+    state.blind = payload;
   }),
 });
 
