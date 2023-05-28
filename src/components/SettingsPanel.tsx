@@ -21,6 +21,32 @@ export default function SettingsPanel() {
   const business = useStoreState((state) => state.business)!;
   const status = useStoreState((state) => state.status);
   const setStatus = useStoreActions((state) => state.setStatus);
+  const turn = useStoreState((state) => state.gameState?.turn);
+  const moves = useStoreState((state) => state.gameState?.moves);
+
+  const lastMoves = turn === "white" ? moves?.slice(-2) : moves?.slice(-1);
+  const lastMoveTxt =
+    turn === "white" && lastMoves?.length === 1
+      ? "... "
+      : "" + lastMoves?.map((m) => m.san).join(" ") || "";
+
+  // 1. e4 e5
+  // 2. Nf3 Nc6
+  // ...
+  const movesHtml = moves
+    ?.map((m, i) => [m, moves[i + 1]])
+    .filter((x) => (x[0] && x[0].color === "w") || (x[1] && x[1].color === "b"))
+    ?.map((m, i) => (
+      <Typography
+        key={i}
+        variant="body1"
+        // sx={{
+        //   color: m.color === "w" ? "primary.main" : "secondary.main",
+        // }}
+      >
+        {i + 1}. {m[0].san} {m[1]?.san || ""}
+      </Typography>
+    ));
 
   const { DropDown: OpponentDropDown, selectedValue: lvl } = useDropDown(
     "Opponent",
@@ -58,14 +84,17 @@ export default function SettingsPanel() {
       <Typography variant="h6" sx={{ mb: 2 }}>
         Game in progress
       </Typography>
-      {/* TODO: Make responsive to change */}
       <Typography variant="body1" sx={{ mb: 2 }}>
-        {business.game.turn() === "w" ? "White" : "Black"} to move
+        {turn === "white" ? "White" : "Black"} to move
       </Typography>
 
       <MoveInput />
 
-      <Divider sx={{ mt: 2, mb: 16 }} />
+      <Divider sx={{ mt: 2, mb: 2 }} />
+
+      <Box sx={{ mx: 2, overflowY: "auto", height: "200px" }}>{movesHtml}</Box>
+
+      <Divider sx={{ mt: 2, mb: 2 }} />
 
       <Button
         variant="contained"
@@ -84,6 +113,12 @@ export default function SettingsPanel() {
       <Typography variant="body1" sx={{ mb: 2 }}>
         {business.winner}
       </Typography>
+
+      <Divider sx={{ mt: 2, mb: 2 }} />
+
+      <Box sx={{ mx: 2, overflowY: "auto", height: "200px" }}>{movesHtml}</Box>
+
+      <Divider sx={{ mt: 2, mb: 2 }} />
       <Button
         variant="contained"
         fullWidth

@@ -57,7 +57,10 @@ export default class Business {
           highlight: {
             check: true,
           },
-          check: this.game.isCheckmate(),
+          check:
+            this.game.isCheckmate() && this.game.turn() === "w"
+              ? "white"
+              : "black",
         });
       }
     });
@@ -139,12 +142,27 @@ export default class Business {
     const handle = (data: any) => {
       console.log(data);
       if (data.type === "gameFull") {
-        this.cg.set({ fen: data.state.fen });
+        this.game.load(data.initialFen);
+        const moves = data.state.moves
+          .split(" ")
+          .filter((m: string) => m.length > 0);
+        for (const move of moves) {
+          this.game.move(move);
+        }
+        this.cg.set({ fen: this.game.fen() });
+        store.getActions().setMoves(this.game.history({ verbose: true }));
+        store
+          .getActions()
+          .setTurn(this.game.turn() === "w" ? "white" : "black");
       } else if (data.type === "gameState") {
         const moves = data.moves.split(" ").filter((m: string) => m.length > 0);
         if (moves.length === 0) return;
         this.game.move(moves[moves.length - 1]);
         this.cg.set({ fen: this.game.fen() });
+        store.getActions().setMoves(this.game.history({ verbose: true }));
+        store
+          .getActions()
+          .setTurn(this.game.turn() === "w" ? "white" : "black");
       }
     };
     await this.createStream(url, handle);
@@ -154,12 +172,12 @@ export default class Business {
     const fen = this.cg.getFen();
     const c = new Chess();
     c.load(fen + " w");
-    const color = "white"; //c.turn() === "w" ? "white" : "black";
+    const color = c.turn() === "w" ? "white" : "black";
     const fd = new FormData();
     fd.append("level", level.toString());
     fd.append("color", color);
     fd.append("variant", "standard");
-    fd.append("fen", fen + " w - - 0 1");
+    fd.append("fen", fen);
     try {
       const res = await fetch("https://lichess.org/api/challenge/ai", {
         method: "POST",

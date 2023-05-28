@@ -11,6 +11,12 @@ import {
 import authenticate from "./authenticate";
 import { AccessContext, OAuth2AuthCodePKCE } from "@bity/oauth2-auth-code-pkce";
 import Business, { Status } from "../logic/Business";
+import { Move } from "chess.js";
+
+export interface GameState {
+  moves: Move[];
+  turn: "white" | "black";
+}
 
 export interface EPStore {
   auth: OAuth2AuthCodePKCE;
@@ -35,6 +41,10 @@ export interface EPStore {
   setStatus: Action<EPStore, Status>;
   username: string;
   setUsername: Action<EPStore, string>;
+  gameState: GameState | null;
+  setMoves: Action<EPStore, Move[]>;
+  setTurn: Action<EPStore, "white" | "black">;
+  movesOrdered: Computed<EPStore, Move[][]>;
 }
 
 const lichessHost = "https://lichess.org";
@@ -81,6 +91,46 @@ const store = createStore<EPStore>({
   username: "",
   setUsername: action((state, payload) => {
     state.username = payload;
+  }),
+  gameState: {
+    moves: [],
+    turn: "white",
+  },
+  setMoves: action((state, payload) => {
+    if (state.gameState) state.gameState.moves = payload;
+  }),
+  setTurn: action((state, payload) => {
+    if (state.gameState) state.gameState.turn = payload;
+  }),
+  movesOrdered: computed((state) => {
+    const movesArr: Move[][] = [];
+    if (state.gameState) {
+      for (const move of state.gameState.moves) {
+        if (movesArr.length === 0 && move.color === "b") {
+          movesArr.push([
+            {
+              after: move.before,
+              before: move.before,
+              color: "w",
+              flags: "",
+              san: "...",
+              lan: "...",
+              piece: "k",
+              from: "e5",
+              to: "e5",
+            },
+            move,
+          ]);
+        } else if (move.color === "w") {
+          movesArr.push([move]);
+        } else {
+          movesArr[movesArr.length - 1].push(move);
+        }
+      }
+    } else {
+      return [];
+    }
+    return movesArr;
   }),
 });
 
