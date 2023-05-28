@@ -169,7 +169,10 @@ export default class Business {
         body: fd,
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error.message);
+      if (!res.ok)
+        throw new Error(
+          typeof data.error === "string" ? data.error : data.error.global[0]
+        );
       console.log(data);
     } catch (e) {
       const err = e as Error;
