@@ -1,0 +1,11 @@
+body {
+  overflow: hidden;
+}
+
+cg-board {
+  background-color: #e4d2b5 !important;
+}
+
+.blind piece {
+  display: none;
+}
