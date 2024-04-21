@@ -16,7 +16,7 @@ To set up the project locally, follow these steps:
 
 ## Contributing
 
-Contributions are welcome! Please read the CONTRIBUTING.md for guidelines on how to contribute to this project.
+Contributions are welcome! Feel free to create an issue or PR for bugs/features.
 
 ## License
 
